@@ -23,7 +23,7 @@ for i in range(30):
 
 df = pd.DataFrame({'Questions Correct':x, 'Final Score':y})
 st.header("Grading Rubric Input")
-number = st.number_input('Input the number of questions correct:')
+number = st.number_input('Input the number of questions correct:', step = 1)
 if st.button("Get Score"):
     with st.spinner("Wait for it..."):
         st.info(gradingScale(number))
