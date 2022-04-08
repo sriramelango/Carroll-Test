@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-
+import math 
 # Set Page Options
 st.title("The Carroll Test: Success or Fail")
 
@@ -10,9 +10,8 @@ st.markdown("""
 """)
 
 def gradingScale(questionsCorrect):
-    questionsWrong = 30 - questionsCorrect
-    score = (100 - (2 *questionsWrong))
-    return score
+    score = math.sqrt(questionsCorrect/30) * 100
+    return score 
 
 x = []
 y = []
