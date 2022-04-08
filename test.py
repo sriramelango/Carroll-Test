@@ -27,7 +27,14 @@ number = st.number_input('Input the number of questions correct:')
 if st.button("Get Score"):
     with st.spinner("Wait for it..."):
         st.info(gradingScale(number))
-        st.ballons()
+
+        if gradingScale(number) > 80:
+
+            st.balloons()
+        
+        else:
+
+            st.error("Student beware - You are in for a scare")
 
 st.header("Scoring Dataframe")
 st.table(df)
