@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import math 
+import matplotlib.pyplot as plt
+
 # Set Page Options
 st.title("The Carroll Test: Success or Fail")
 
@@ -25,6 +27,9 @@ number = st.number_input('Input the number of questions correct:')
 if st.button("Get Score"):
     with st.spinner("Wait for it..."):
         st.info(gradingScale(number))
+        st.ballons()
 
 st.header("Scoring Dataframe")
 st.table(df)
+st.header("Final Score Plotting")
+st.line_chart(df['Final Score'])
