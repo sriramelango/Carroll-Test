@@ -2,41 +2,44 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import math 
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import plotly.express as px
 
 # Set Page Options
-st.title("The Carroll Test: Success or Fail")
+st.title("The Carroll Grading Scale")
+st.markdown("Success or Failure? She decides")
+def grade(score1, score2):
+    if score1 <= 60:
+        score1 = (1/60) * score1
+    elif score1 > 60:
+        score1 = .2 * score1 - 11
+    grade100 = (((.65 * score1) + (.35 * score2))/(.65 * 9 + .35 * 6)) * 100
+    gradeScaled = (((.65 * score1) + (.35 * score2))/(.65 * 9 + .35 * 6)) * 9
+    return grade100, gradeScaled
 
-st.markdown("""
-* Mrs. Carroll, I make a modest proposal - if you are entering the grade of Sriram Elango, you should 100% make it a 100.
-""")
-
-def gradingScale(questionsCorrect):
-    score = math.sqrt(questionsCorrect/30) * 100
-    return score 
-
-x = []
-y = []
-for i in range(30):
-    x.append(i+1)
-    y.append(gradingScale(i+1))
-
-df = pd.DataFrame({'Questions Correct':x, 'Final Score':y})
 st.header("Grading Rubric Input")
-number = st.number_input('Input the number of questions correct:', step = 1)
-if st.button("Get Score"):
-    with st.spinner("Wait for it..."):
-        st.info(gradingScale(number))
+scale1 = st.number_input('Input the number of points gained from the 9 scale (in a scale of 100)', step = 5)
+scale2 = st.number_input('Input the number of points gained from the 6 scale', step = .5)
 
-        if gradingScale(number) > 80:
+with st.expander("Grade Output"):
+    grade100, gradeScaled = grade(scale1, scale2)
+    st.success("Grade out of 9: " + str(round(gradeScaled,2)))
+    st.info("Grade out of 100: " + str(round(grade100,2)))
+    if grade100 > 90:
+        st.balloons()
 
-            st.balloons()
-        
-        else:
+with st.expander("Grade Rubric Multivariable Graph"):
 
-            st.error("Student beware - You are in for a scare")
+    rubricData = pd.read_csv('data.csv')
+    fig = px.scatter_3d(rubricData, x='9-Point-Scale', y='6-Point-Scale', z='Grade', color='Grade', width=400, height=800)
 
-st.header("Scoring Dataframe")
-st.table(df)
-st.header("Final Score Plotting")
-st.line_chart(df['Final Score'])
+    camera = dict(
+        eye=dict(x=-1.5, y=-1.5, z=0.2)
+    )
+    fig.update_layout(scene_camera=camera)
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+
+
